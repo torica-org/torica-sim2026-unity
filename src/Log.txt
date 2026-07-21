@@ -1,0 +1,38 @@
+2026/07/21 20:52:07 - GameManager Awake.
+2026/07/21 20:52:24 - [Splashdown!] Result: 67.98772 m
+2026/07/21 20:54:01 - GameManager Awake.
+2026/07/21 20:54:15 - GameManager Awake.
+2026/07/21 20:54:29 - [Takeoff!]
+2026/07/21 20:54:36 - [Takeoff!]
+2026/07/21 20:54:43 - [Splashdown!] Result: 35.48922 m
+2026/07/21 20:55:50 - GameManager Awake.
+2026/07/21 20:55:54 - [Takeoff!]
+2026/07/21 20:56:01 - [Splashdown!] Result: 32.61 m
+2026/07/21 20:59:37 - GameManager Awake.
+2026/07/21 21:00:45 - VR started.
+2026/07/21 21:01:56 - VR stopped.
+2026/07/21 21:01:58 - VR started.
+2026/07/21 21:01:59 - VR stopped.
+2026/07/21 21:02:00 - VR started.
+2026/07/21 21:02:00 - VR stopped.
+2026/07/21 21:02:01 - VR started.
+2026/07/21 21:02:02 - VR stopped.
+2026/07/21 21:02:04 - VR started.
+2026/07/21 21:02:05 - VR stopped.
+2026/07/21 21:02:07 - VR started.
+2026/07/21 21:02:08 - VR stopped.
+2026/07/21 21:02:09 - VR started.
+2026/07/21 21:03:03 - VR stopped.
+2026/07/21 21:05:09 - GameManager Awake.
+2026/07/21 21:19:44 - GameManager Awake.
+2026/07/21 22:01:03 - GameManager Awake.
+2026/07/21 23:12:39 - GameManager Awake.
+2026/07/21 23:12:48 - [Takeoff!]
+2026/07/21 23:12:57 - [Splashdown!] Result: 52.41 m
+2026/07/21 23:12:59 - [Takeoff!]
+2026/07/21 23:13:42 - GameManager Awake.
+2026/07/21 23:30:52 - GameManager Awake.
+2026/07/21 23:31:26 - GameManager Awake.
+2026/07/21 23:32:09 - GameManager Awake.
+2026/07/21 23:32:55 - GameManager Awake.
+2026/07/21 23:33:38 - [Takeoff!]

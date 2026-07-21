@@ -1,0 +1,100 @@
+// ----- Configurations -----
+
+// 使用する機体の3Dモデル
+AircraftModelName = Tatsumi
+
+// 使用する機体諸元（以下に利用可能な機体が列挙されます）
+// --------------------------------------------------------
+// ~Tatsumi, ARG-2, Aria, Camellia, Gaillardia, Gardenia,
+// ORCA18, ORCA22, QX-18, QX-19, QX-20,
+// REWRITE_シミュデータ, UL01B,
+// --------------------------------------------------------
+AircraftDataName = REWRITE_シミュデータ
+
+// パイロットの体重の上書き[kg](初期値: 0.0)
+OverridePilotMass = 0
+
+// オーディオの音量(初期値: 50.0)
+AudioVolume = 61
+
+// 飛行中の画面の周囲に情報を表示する(True/False)
+ShowHUD = True
+
+// 水平線を表示する(True/False)
+ShowHorizontalLine = False
+
+// メインディスプレイを三人称視点にする(True/False)
+MainCamera = True
+
+// マウスによる重心移動を有効化する(True/False)
+UseMousePitchControl = False
+
+// マウス感度を設定する(初期値: 1.0)
+MouseSensitivity = 1.0
+
+// VR HMDによる重心移動を有効化する(初期値: False)
+VrOnlyMode = False
+
+// シリアルポートの名前(初期値: None)
+// (Windowsでは`COM1`など，Macでは`/dev/tty.usbmodem1421`など)
+// 候補：None
+SerialPort = com6
+
+// ニュートラルにおけるラダー入力値(初期値: 7500.0)
+RudderZero = 7500.0
+
+// 最大入力におけるラダー入力値(初期値: 7722.2)
+RudderMax = 7722.2
+
+// ラダー入力値の反転(初期値: False)
+RudderReverse = True
+
+// フライトログの出力を有効化する(True/False)
+ExportLog = False
+
+// 風速[m/s](初期値: 0.0)
+WindMagnitude = 0.9
+
+// 風上[deg](範囲: [L]-180.0 ↔ [R]180.0) / 初期値: 0.0
+WindDirection = 0.0
+
+// 風の範囲指定(※「風速」「風上」の設定を上書きします / 初期値: None)
+// 以下の形式に従って入力してください（数値範囲はマイクラと同様）:
+//     風速:風向@開始距離..終了距離; 風速:風向@開始距離..終了距離; ...
+// 設定例:
+//     設定なし（「風速」「風上」の設定が適用されます）: `None`
+//     100mまで90degから2m/s，それ以降は90degから3m/s): `2:90@..100; 3:90@100..`
+//     300mから400mまでは-90degから1m/s，それ以外は風なし): `1:-90@300..400`
+WindRangeSpec = None
+
+// 離陸時のスピード[m/s](初期値: 6.5)
+TakeoffSpeed = 5.2
+
+// 離陸時のロール[deg](初期値: 0.0)
+TakeoffRoll = 0.0
+
+// 離陸時のピッチ[deg](初期値: 0.0)
+TakeoffPitch = 0.0
+
+// 離陸時のヨー[deg](初期値: 0.0)
+TakeoffYaw = 0.0
+
+// 定常風をランダム化する(True/False)
+RandomizeWind = False
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
