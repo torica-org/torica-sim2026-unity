@@ -14,9 +14,8 @@ public class SettingController : MonoBehaviour
     public void OnEnables()
     {
         Setting = GameObject.Find("Setting");
-
-        GameManager.instance.game.SettingActive = false;
-        Setting.SetActive(GameManager.instance.game.SettingActive);
+        GameManager.instance.game.status = GameParameters.Status.Preparation;
+        Setting.SetActive(false);
     }
 
     void Start(){
@@ -25,10 +24,9 @@ public class SettingController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown("tab") && !GameManager.instance.game.FlightSettingActive && !GameManager.instance.game.Landing){
-            GameManager.instance.game.SettingActive = !GameManager.instance.game.SettingActive;
-            Setting.SetActive(GameManager.instance.game.SettingActive);
-            Time.timeScale=(float)Convert.ToInt32(!GameManager.instance.game.FlightSettingActive & !GameManager.instance.game.SettingActive & !GameManager.instance.game.Landing);
+        if(Input.GetKeyDown("tab") && GameManager.instance.game.status != GameParameters.Status.Flight){
+            GameManager.instance.game.status = GameParameters.Status.Flight;
+            Setting.SetActive(true);
         }
         // if(Input.GetKeyDown("c")){
         //     Config.UseMousePitchControl = !Config.UseMousePitchControl;

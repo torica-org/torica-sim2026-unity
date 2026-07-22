@@ -17,15 +17,12 @@ public class FlightSettingController : MonoBehaviour
     {
         FlightSetting = GameObject.Find("FlightSetting");
 
-        GameManager.instance.game.FlightSettingActive = true;
-        FlightSetting.SetActive(GameManager.instance.game.FlightSettingActive);
-
-        Time.timeScale=(float)Convert.ToInt32(!GameManager.instance.game.FlightSettingActive &!GameManager.instance.game.SettingActive & !GameManager.instance.game.Landing);
+        GameManager.instance.game.status = GameParameters.Status.Preparation;
+        FlightSetting.SetActive(true);
     }
 
     void Start()
     {
-
         SaveCsvScript = this.GetComponent<SaveCsvScript>();
     }
 
@@ -35,11 +32,9 @@ public class FlightSettingController : MonoBehaviour
             // OnStartTrigger = true;
         // }
 
-        if( (Input.GetButtonDown("StartButton") || OnStartTrigger) && !GameManager.instance.game.EnterFlight){
-            GameManager.instance.game.EnterFlight = true;
-            GameManager.instance.game.FlightSettingActive = !GameManager.instance.game.FlightSettingActive;
-            FlightSetting.SetActive(GameManager.instance.game.FlightSettingActive);
-            Time.timeScale=(float)Convert.ToInt32(!GameManager.instance.game.FlightSettingActive & !GameManager.instance.game.Landing);
+        if( (Input.GetButtonDown("StartButton") || OnStartTrigger) && GameManager.instance.game.status != GameParameters.Status.Flight){
+            GameManager.instance.game.status = GameParameters.Status.Flight;
+            FlightSetting.SetActive(false);
             SaveCsvScript.SetFile();
             // OnStartTrigger = false;
         }

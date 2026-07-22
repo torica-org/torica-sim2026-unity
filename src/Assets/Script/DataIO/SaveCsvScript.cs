@@ -28,7 +28,7 @@ public class SaveCsvScript : MonoBehaviour
             string path = Application.dataPath + "/" + fileName + ".csv";
 
             text.text = path;
-        
+
             sw = new StreamWriter(path, false, Encoding.GetEncoding("UTF-8"));
             string[] s1 = { "Time","Airspeed", "ALT", "Alpha" , "Beta" , "Theta" , "Phi"};
             string s2 = string.Join(",", s1);
@@ -45,12 +45,12 @@ public class SaveCsvScript : MonoBehaviour
 
     void Update()
     {
-        if(GameManager.instance.game.Landing == true && OnClose == false && Config.ExportLog){
+        if(GameManager.instance.game.status == GameParameters.Status.Splashdown && OnClose == false && Config.ExportLog){
             sw.Close();
             OnClose = true;
         }
 
-        if(Input.GetKeyDown("p") && !GameManager.instance.game.EnterFlight){
+        if(Input.GetKeyDown("p") && GameManager.instance.game.status != GameParameters.Status.Flight){
             Config.ExportLog = !Config.ExportLog;
         }
 

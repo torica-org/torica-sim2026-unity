@@ -19,21 +19,19 @@ public class FlightSettingCloseButton : MonoBehaviour
 
     void Update()
     {
-
+        if (GameManager.instance.game.status == GameParameters.Status.Flight)
+        {
+            FlightSetting.SetActive(false);
+        }
+        else if (GameManager.instance.game.status == GameParameters.Status.Preparation)
+        {
+            FlightSetting.SetActive(true);
+        }
     }
 
     public void OnClick()
     {
-        Debug.Log("FlightSettingCloseButton clicked!");
-        Debug.Log($"EnterFlight: {GameManager.instance.game.EnterFlight}");
-        if (!GameManager.instance.game.EnterFlight)
-        {
-            GameManager.instance.game.EnterFlight = true;
-            //firstPush = true;
-            GameManager.instance.game.FlightSettingActive = !GameManager.instance.game.FlightSettingActive;
-            FlightSetting.SetActive(GameManager.instance.game.FlightSettingActive);
-            Time.timeScale=(float)Convert.ToInt32(!GameManager.instance.game.FlightSettingActive & !GameManager.instance.game.Landing);
-            SaveCsvScript.SetFile();
-        }
+        GameManager.instance.game.status = GameParameters.Status.Flight;
+        SaveCsvScript.SetFile();
     }
 }

@@ -8,7 +8,6 @@ using System;
 public class SettingCloseButton : MonoBehaviour
 {
     private GameObject Setting;
-    private bool firstPush = false;
 
     // Start is called before the first frame update
     void Start()
@@ -18,11 +17,18 @@ public class SettingCloseButton : MonoBehaviour
 
     public void OnClick()
     {
-        if (!firstPush)
+        GameManager.instance.game.status = GameParameters.Status.Flight;
+    }
+
+    private void Update()
+    {
+        if (GameManager.instance.game.status == GameParameters.Status.Flight)
         {
-            GameManager.instance.game.SettingActive = !GameManager.instance.game.SettingActive;
-            Setting.SetActive(GameManager.instance.game.SettingActive);
-            Time.timeScale=(float)Convert.ToInt32(!GameManager.instance.game.FlightSettingActive & !GameManager.instance.game.SettingActive & !GameManager.instance.game.Landing);
+            Setting.SetActive(false);
+        }
+        else if (GameManager.instance.game.status == GameParameters.Status.Preparation)
+        {
+            Setting.SetActive(true);
         }
     }
 }

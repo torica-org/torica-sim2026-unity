@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class StartMethod : MonoBehaviour
+public class StartMethod : MonoBehaviour　// SystemControllerにアタッチ
 {
     [SerializeField] private ChangeAircraft changeAircraft;
     [SerializeField] private FlightSettingController flightSettingController;

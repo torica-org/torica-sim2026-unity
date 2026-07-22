@@ -481,11 +481,11 @@ public class AerodynamicCalculator
             }
             //Debug.Log("YlMoment:"+aero.YlMoment+"YrMoment:"+aero.YrMoment+"aeroX:"+AerodynamicMomentum.x);
             //AerodynamicMomentum.x += aero.YrMoment + aero.YlMoment;//最終的なロールモーメントの計算//一旦消す
-            GameManager.instance.game.TakeOff = false;
+            aero.TakeOff = false;
         }
         else
         {
-            GameManager.instance.game.TakeOff = true;
+            aero.TakeOff = true;
             //PlaneRigidbody.constraints = RigidbodyConstraints.None;
         }
         //else if(GameManager.instance.game.FlightMode=="BirdmanRally" && !AddTaleForce){

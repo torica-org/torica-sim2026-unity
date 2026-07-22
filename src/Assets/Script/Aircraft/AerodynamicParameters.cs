@@ -187,5 +187,5 @@ public class AerodynamicParameters
 
     public bool AddTaleForce;
 
-
+    public bool TakeOff;
 }

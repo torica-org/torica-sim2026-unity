@@ -27,8 +27,6 @@ public class ManualXRControl
         {
             Debug.Log("Starting XR...");
             XRGeneralSettings.Instance.Manager.StartSubsystems();
-            // ▼追加：VRサブシステム起動直後に、Unityのオーディオエンジンをリセット（再認識）させる
-            AudioSettings.Reset(AudioSettings.GetConfiguration());
             Debug.Log("Audio Engine Reset for VR.");
             gm.game.errorText = "VR started.";
         }

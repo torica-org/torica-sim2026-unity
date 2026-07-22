@@ -23,7 +23,7 @@ public class LoadSceneController : MonoBehaviour
         // "ResetButton"は Input Manager に設定されている.
         if(Input.GetMouseButton(2) || Input.GetButtonDown("ResetButton")){
             Time.timeScale=1f;
-            GameManager.instance.game.EnterFlight = false;
+            GameManager.instance.game.status = GameParameters.Status.Preparation;
             GameManager.instance.game.SettingMode = 0;
             SceneManager.LoadScene("FlightScene");
         }

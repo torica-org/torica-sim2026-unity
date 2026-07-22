@@ -15,7 +15,7 @@ AircraftDataName = REWRITE_シミュデータ
 OverridePilotMass = 0
 
 // オーディオの音量(初期値: 50.0)
-AudioVolume = 61
+AudioVolume = 74
 
 // 飛行中の画面の周囲に情報を表示する(True/False)
 ShowHUD = True
@@ -53,9 +53,9 @@ RudderReverse = True
 ExportLog = False
 
 // 風速[m/s](初期値: 0.0)
-WindMagnitude = 0.9
+WindSpeed = 0.0
 
-// 風上[deg](範囲: [L]-180.0 ↔ [R]180.0) / 初期値: 0.0
+// 風上[deg](範囲: [L]-180.0 ↔ [R]180.0 / 初期値: 0.0)
 WindDirection = 0.0
 
 // 風の範囲指定(※「風速」「風上」の設定を上書きします / 初期値: None)
@@ -68,7 +68,7 @@ WindDirection = 0.0
 WindRangeSpec = None
 
 // 離陸時のスピード[m/s](初期値: 6.5)
-TakeoffSpeed = 5.2
+TakeoffSpeed = 5.8
 
 // 離陸時のロール[deg](初期値: 0.0)
 TakeoffRoll = 0.0

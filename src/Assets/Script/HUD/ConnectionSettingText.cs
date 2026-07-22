@@ -22,10 +22,7 @@ public class ConnectionSettingText : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.instance.game.FlightSettingActive)
-        {
-            RefreshText();
-        }
+        RefreshText();
     }
 
     void RefreshText()

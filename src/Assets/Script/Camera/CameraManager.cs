@@ -29,9 +29,9 @@ public class CameraManager : MonoBehaviour
     private ManualXRControl manualXRControl = new(); // VR制御用クラスを保持するフィールド.
     private MultiCameraDisplay multiCameraDisplay; // カメラ制御用クラスを保持するフィールド.
 
-    private AudioListener audioListener; // AudioListenerコンポーネントを保持するフィールド
+    private bool VRModePre = false; // VRモードが前回のフレームで有効かどうかを保持するフィールド
 
-    private bool isVRInitialized = false; // VRが初期化されたかどうかを示すフラグ
+    private AudioListener audioListener; // AudioListenerコンポーネントを保持するフィールド
 
     // GameManager.csへ移動
     //private Vector3 caribrationOffset = Vector3.zero; // キャリブレーションのオフセットを保持するフィールド.
@@ -42,6 +42,7 @@ public class CameraManager : MonoBehaviour
     {
         gm = GameManager.instance; // `GameManager`のインスタンスを取得して代入.
         ui = UIManager.instance; // `UIManager`のインスタンスを取得して代入.
+
 
         // Cameraのオブジェクトとコンポーネントを取得.
         FPSObj = GameManager.instance.game.Plane.transform.Find("FPSCamera").gameObject;
@@ -61,8 +62,8 @@ public class CameraManager : MonoBehaviour
 
         XRSettings.gameViewRenderMode = GameViewRenderMode.None;
 
-        // AudioListenerコンポーネントをSystemControllerから取得して保持する.
-        audioListener = GameObject.Find("SystemController").GetComponent<AudioListener>();
+        // AudioListenerコンポーネントをMain Cameraから取得して保持する.
+        audioListener = transform.Find("XR Origin (XR Rig)/Camera Offset/Main Camera").GetComponent<AudioListener>();
     }
 
     // ===== 毎フレーム実行されるメソッド =================================================
@@ -89,56 +90,13 @@ public class CameraManager : MonoBehaviour
             multiCameraDisplay.ToggleSubDisplay();
         }
 
-        // VRモードの切り替えを検知して、必要に応じてVR制御を開始する.
-        if (gm.game.VRMode && !isVRInitialized)
+        if (gm.game.VRMode && !gm.game.isVRInitialized)
         {
-            isVRInitialized = true; // VR初期化済のフラグを立てる.
-
-            // VRのカメラとtargetDisplayが被るとエラーとなるが，`enabled = false`なら大丈夫.
-            FPSCamera.targetDisplay = 0; // 固定.
-            TPSCamera.targetDisplay = 1; // 一時的に固定.
-            XRCamera.targetDisplay = 0; // インスペクターでも`Display 1`に設定済みだが念の為.
-
-            FPSCamera.enabled = false; // FPSカメラを無効にする（VRモードではXR OriginのCameraが使用されるため）.
-            XRCamera.enabled = true; // XRカメラを有効にする.
-
-            // 他のカメラのTargetEyeをNoneにする（念の為上書き）.
-            //FPSCamera.stereoTargetEye = StereoTargetEyeMask.None;
-            //TPSCamera.stereoTargetEye = StereoTargetEyeMask.None;
-
-            audioListener.enabled = false; // AudioListenerを無効にする（VRモードではXR OriginのAudioListenerが使用されるため）.
-
-            try
-            {
-                StartCoroutine(manualXRControl.StartXRCoroutine());
-                multiCameraDisplay.SetGameViewRenderMode(false); // ゲームビューにVR映像を出力しない.
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogWarning("VR init error: " + e.Message);
-
-                manualXRControl.StopXR();
-                gm.game.VRMode = false;
-                isVRInitialized = false; // 初期化に失敗した場合はフラグを下ろす.
-
-                return;
-            }
-
-            TPSCamera.targetDisplay = 0; // 固定.
-
-            Vector3 zAxisRotation = new(0f, 90f, 0f);
-            XROrigin.transform.eulerAngles = zAxisRotation; // CameraManagerの向きをFPSカメラと同様にy軸について90deg回転させる.
+            EnebleVR();
         }
-        else if (!gm.game.VRMode && isVRInitialized)
+        else if (!gm.game.VRMode && gm.game.isVRInitialized)
         {
-            isVRInitialized = false; // VR初期化済のフラグを下ろす.
-
-            manualXRControl.StopXR(); // VRを停止する.
-
-            XRCamera.enabled = false;
-            FPSCamera.enabled = true;
-
-            audioListener.enabled = true; // AudioListenerを有効にする.
+            DisableVR();
         }
 
         SyncCameraFlag();
@@ -158,6 +116,61 @@ public class CameraManager : MonoBehaviour
         Vector3 sideObjOffset = new(10f, 3f, -10f); // FPSカメラに対して右前方に配置.
         SideObj.transform.position = FPSObj.transform.position + sideObjOffset; // サイドビューカメラの位置をFPSカメラの位置にオフセットして設定.
         SideObj.transform.LookAt(gm.game.Plane.transform); // サイドビューカメラをFPSカメラの方に向ける.
+
+        if (gm.game.VRMode != VRModePre)
+        {
+            VRModePre = gm.game.VRMode;
+        }
+    }
+
+    // ===== VRモードを有効にするメソッド =================================================
+    private void EnebleVR()
+    {
+        gm.game.isVRInitialized = true; // VR初期化済のフラグを立てる.
+
+        // VRのカメラとtargetDisplayが被るとエラーとなるが，`enabled = false`なら大丈夫.
+        FPSCamera.targetDisplay = 0; // 固定.
+        TPSCamera.targetDisplay = 1; // 一時的に固定.
+        XRCamera.targetDisplay = 0; // インスペクターでも`Display 1`に設定済みだが念の為.
+
+        FPSCamera.enabled = false; // FPSカメラを無効にする（VRモードではXR OriginのCameraが使用されるため）.
+        XRCamera.enabled = true; // XRカメラを有効にする.
+
+        // 他のカメラのTargetEyeをNoneにする（念の為上書き）.
+        //FPSCamera.stereoTargetEye = StereoTargetEyeMask.None;
+        //TPSCamera.stereoTargetEye = StereoTargetEyeMask.None;
+
+        // audioListener.enabled = false; // AudioListenerを無効にする（VRモードではXR OriginのAudioListenerが使用されるため）.
+
+        try
+        {
+            StartCoroutine(manualXRControl.StartXRCoroutine());
+            multiCameraDisplay.SetGameViewRenderMode(false); // ゲームビューにVR映像を出力しない.
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning("VR init error: " + e.Message);
+
+            manualXRControl.StopXR();
+            gm.game.VRMode = false;
+            gm.game.isVRInitialized = false; // 初期化に失敗した場合はフラグを下ろす.
+
+            return;
+        }
+
+        TPSCamera.targetDisplay = 0; // 固定.
+
+        Vector3 zAxisRotation = new(0f, 90f, 0f);
+        XROrigin.transform.eulerAngles = zAxisRotation; // CameraManagerの向きをFPSカメラと同様にy軸について90deg回転させる.
+    }
+
+    // ===== VRモードを無効にするメソッド =================================================
+    private void DisableVR()
+    {
+        gm.game.isVRInitialized = false; // VR初期化済のフラグを下ろす.
+        manualXRControl.StopXR(); // VRを停止する.
+        XRCamera.enabled = false;
+        FPSCamera.enabled = true;
     }
 
     // ===== カメラの状態をフラグと同期するメソッド =================================================
@@ -165,7 +178,7 @@ public class CameraManager : MonoBehaviour
     {
         //int displayNum = -1;
 
-        if (isVRInitialized)
+        if (gm.game.isVRInitialized)
         {
             //displayNum = XRCamera.targetDisplay; // これはおそらく0になるはず.
             return;
@@ -198,7 +211,7 @@ public class CameraManager : MonoBehaviour
     // ===== キャリブレーションを行うメソッド（staticなのでインスタンス化無しで呼べる） ============
     public void CaribrateVR()
     {
-        if (!XRCamera || !isVRInitialized)
+        if (!XRCamera || !gm.game.isVRInitialized)
         {
             Debug.LogWarning("Caribration failed: XRCamera is not initialized.");
             return;
@@ -227,7 +240,7 @@ public class CameraManager : MonoBehaviour
     // ===== VRゴーグルの前後移動量を返すメソッド ============================
     public float GetZAxisMovement()
     {
-        if (!XRCamera || !isVRInitialized)
+        if (!XRCamera || !gm.game.isVRInitialized)
         {
             Debug.LogWarning("Getting movement failed: XRCamera is not initialized.");
             return 0f;
@@ -238,10 +251,12 @@ public class CameraManager : MonoBehaviour
     // ===== オブジェクトが破棄された際に実行されるメソッド ======================================
     private void OnDestroy()
     {
+        if (gm == null) return;
+        if (gm.game == null) return;
         // オブジェクトが破棄される際にVRを停止する.
-        if (isVRInitialized)
+        if (gm.game.isVRInitialized)
         {
-            isVRInitialized = false;
+            gm.game.isVRInitialized = false;
             manualXRControl.StopXR();
         }
     }
@@ -250,9 +265,9 @@ public class CameraManager : MonoBehaviour
     private void OnApplicationQuit()
     {
         // アプリケーションが終了する際にVRを停止する.
-        if (isVRInitialized)
+        if (gm.game.isVRInitialized)
         {
-            isVRInitialized = false;
+            gm.game.isVRInitialized = false;
             manualXRControl.StopXR();
         }
     }

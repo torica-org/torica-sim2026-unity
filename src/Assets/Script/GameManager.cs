@@ -11,11 +11,9 @@ public class GameManager : MonoBehaviour
     public AerodynamicParameters aero;
     public AerodynamicCalculator calc;
     public PilotPositionResetter pilot;
+    public HoldingDetector hold;
     public CameraManager cm;
     private GameObject FlightSetting = null;
-
-    private float timeInCurrentStatus = 0.0f;
-    private readonly float IGNORE_INPUT_TIME = 1.0f;
 
     public static GameManager instance = null;
     public bool FirstLoad;//シミュ起動後最初のシーンロードか否か
@@ -45,9 +43,10 @@ public class GameManager : MonoBehaviour
         cm = GameObject.Find("CameraManager").GetComponent<CameraManager>();
         calc = new(game, aero);
         pilot = new(aero);
-        // GameObject aeroObj = GameObject.Find("");
-        SerialHandler.OnHoldingPositive += PositiveHolding;
-        SerialHandler.OnHoldingNegative += NegativeHolding;
+        hold = new(game, cm);
+        game.OnStatusChange += OnStatusChange;
+        SerialHandler.OnHoldingPositive += hold.PositiveHolding;
+        SerialHandler.OnHoldingNegative += hold.NegativeHolding;
         calc.Initialize();
     }
 
@@ -63,101 +62,38 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        calc?.Initialize();
+        calc?.Initialize(); // シーンロードのたびにRigidbodyが破壊されるので再取得
     }
-
-    private void PositiveHolding()
-    {
-        if (timeInCurrentStatus >= IGNORE_INPUT_TIME)
-        {
-            if (game.status == GameParameters.Status.Splashdown) // 長押し＋着水
-            {
-                Debug.Log("CMD: Reset");
-                game.EnterFlight = false;
-                game.SettingMode = 2;
-                SceneManager.LoadScene("FlightScene");
-            }
-            if (game.status == GameParameters.Status.Preparation) // 正の長押し＋準備
-            {
-                Debug.Log("CMD: Caribrate");
-                if (cm == null)
-                {
-                    cm = GameObject.Find("CameraManager").GetComponent<CameraManager>();
-                }
-                if (cm != null)
-                {
-                    cm.CaribrateVR();
-                }
-                pilot.ResetPilotPosition();
-            }
-            timeInCurrentStatus = 0.0f;
-        }
-    }
-
-    private void NegativeHolding()
-    {
-        if (timeInCurrentStatus >= IGNORE_INPUT_TIME)
-        {
-            if (game.status == GameParameters.Status.Splashdown) // 長押し＋着水
-            {
-                Debug.Log("CMD: Reset");
-                game.EnterFlight = false;
-                game.SettingMode = 2;
-                SceneManager.LoadScene("FlightScene");
-            }
-            if (game.status == GameParameters.Status.Preparation)
-            {
-                Debug.Log("CMD: Start");
-                game.EnterFlight = true;
-                if (FlightSetting == null)
-                {
-                    FlightSetting = GameObject.Find("FlightSetting");
-                }
-                if (FlightSetting != null)
-                {
-                    game.FlightSettingActive = false;
-                    FlightSetting.SetActive(game.FlightSettingActive);
-                }
-                Time.timeScale = (float)Convert.ToInt32(!game.FlightSettingActive & !game.Landing);
-            }
-            timeInCurrentStatus = 0.0f;
-        }
-    }
-
     // ===== 毎フレーム実行される ==============
     private void Update()
     {
         calc.DevicesUpdate();
-        GameParameters.Status prev = game.status;
 
-        bool Setting = game.SettingActive || game.FlightSettingActive;
         // ----- ゲームの状態を管理 -----
-        if (Setting == true && game.EnterFlight == false && game.Landing == false)
+        if (game.status == GameParameters.Status.Preparation)
         {
-            game.status = GameParameters.Status.Preparation;
+            Time.timeScale = 0f;
         }
-        else if (Setting == false && game.EnterFlight == true && game.Landing == false)
+        else if (game.status == GameParameters.Status.Flight)
         {
-            game.status = GameParameters.Status.Flight;
+            Time.timeScale = 1f;
         }
-        else if (Setting == false && game.EnterFlight == true && game.Landing == true)
+        else if (game.status == GameParameters.Status.Splashdown)
         {
-            game.status = GameParameters.Status.Splashdown;
+            Time.timeScale = 0f;
         }
+        else if (game.status == GameParameters.Status.Pause)
+        {
+            Time.timeScale = 0f;
+        }
+    }
 
-        if (prev != game.status)
+    private void OnStatusChange()
+    {
+        if (game.status == GameParameters.Status.Flight)
         {
-            if (game.status == GameParameters.Status.Flight)
-            {
-                Log.Append("[Takeoff!]");
-            }
-            timeInCurrentStatus = 0f;
+            Log.Append("[Takeoff!]");
         }
-        else
-        {
-            timeInCurrentStatus += Time.unscaledDeltaTime;
-        }
-        // Debug.Log(timeInCurrentStatus);
     }
 
     public void FixedUpdate()

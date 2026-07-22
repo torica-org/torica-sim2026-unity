@@ -159,12 +159,12 @@ public static class Config
         set => SetProperty(ref exportLog, value);
     }
 
-    private static readonly float defaultWindMagnitude = 0.0f;
-    private static float windMagnitude = defaultWindMagnitude;
-    public static float WindMagnitude
+    private static readonly float defaultWindSpeed = 0.0f;
+    private static float windSpeed = defaultWindSpeed;
+    public static float WindSpeed
     {
-        get => windMagnitude;
-        set => SetProperty(ref windMagnitude, value);
+        get => windSpeed;
+        set => SetProperty(ref windSpeed, value);
     }
 
     private static readonly float defaultWindDirection = 0.0f;
@@ -336,7 +336,7 @@ public static class Config
             rudderReverse = CheckContent("RudderReverse", defaultRudderReverse);
             exportLog = CheckContent("ExportLog", defaultExportLog);
             randomizeWind = CheckContent("RandomizeWind", defaultRandomizeWind);
-            windMagnitude = CheckContent("WindMagnitude", defaultWindMagnitude);
+            windSpeed = CheckContent("WindSpeed", defaultWindSpeed);
             windDirection = CheckContent("WindDirection", defaultWindDirection);
             windRangeSpec = CheckContent("WindRangeSpec", defaultWindRangeSpec);
             takeoffSpeed = CheckContent("TakeoffSpeed", defaultTakeoffSpeed);
@@ -484,11 +484,11 @@ public static class Config
         addConfig("ExportLog", ExportLog.ToString());
         newLine();
 
-        addString($"風速[m/s](初期値: {defaultWindMagnitude:0.0})");
-        addConfig("WindMagnitude", WindMagnitude.ToString("0.0"));
+        addString($"風速[m/s](初期値: {defaultWindSpeed:0.0})");
+        addConfig("WindSpeed", WindSpeed.ToString("0.0"));
         newLine();
 
-        addString($"風上[deg](範囲: [L]-180.0 ↔ [R]180.0) / 初期値: {defaultWindDirection:0.0}");
+        addString($"風上[deg](範囲: [L]-180.0 ↔ [R]180.0 / 初期値: {defaultWindDirection:0.0})");
         addConfig("WindDirection", WindDirection.ToString("0.0"));
         newLine();
 

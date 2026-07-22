@@ -79,7 +79,7 @@ public class ResultScreen
         // トラブルの結果を表示
         string troubles = "";
         troubles += "風速: ";
-        troubles += Config.WindMagnitude.ToString("0.0") + "m/s";
+        troubles += Config.WindSpeed.ToString("0.0") + "m/s";
         troubles += "    風上: ";
         string DirectionText;
         if (Config.WindDirection >= 0)

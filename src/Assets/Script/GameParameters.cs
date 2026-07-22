@@ -7,20 +7,22 @@ using UnityEngine.SceneManagement;
 
 public class GameParameters
 {
-    public enum Status {
+    public enum Status
+    {
         Preparation,
         Flight,
         Splashdown,
         Pause,
     }
     public Status status = Status.Preparation;
+    private Status previousStatus = Status.Preparation;
 
 
-    [System.NonSerialized] public bool Landing = false;//着水しているか否か
+    // [System.NonSerialized] public bool Landing = false;//着水しているか否か
     // [System.NonSerialized] public bool HUDActive = true;//HUDを有効にしているか否か
     // [System.NonSerialized] public bool HorizontalLineActive = false;//水平赤線を有効にしているか否か
-    [System.NonSerialized] public bool SettingActive = false;//ゲーム設定の表示
-    [System.NonSerialized] public bool FlightSettingActive = false;//フライト設定の表示
+    // [System.NonSerialized] public bool SettingActive = false;//ゲーム設定の表示
+    // [System.NonSerialized] public bool FlightSettingActive = false;//フライト設定の表示
 
     // [System.NonSerialized] public bool isMainDisplayTPS = true; // true:FPS false:TPS
 
@@ -37,7 +39,7 @@ public class GameParameters
     //[System.NonSerialized] public bool updatePlaneData = true; // 最初は諸元を読み込む必要がある.
     // --------------------------------------------------------------------------------------
 
-    [System.NonSerialized] public bool EnterFlight = false;//フライト開始
+    // [System.NonSerialized] public bool EnterFlight = false;//フライト開始
     // [System.NonSerialized] public float MouseSensitivity = 1.000f; // Magnitude of Gust [m/s]
     // [System.NonSerialized] public float GustMag = 0.000f; // Magnitude of Gust [m/s]
     // [System.NonSerialized] public float GustDirection = 0.000f; // Direction of Gust [deg]: -180~180
@@ -59,7 +61,7 @@ public class GameParameters
     // [System.NonSerialized] public float massRight0 = 0;
     // [System.NonSerialized] public float massBackwardRight0 = 0;
     // [System.NonSerialized] public float massBackwardLeft0 = 0;
-    [System.NonSerialized] public float JoyStick0 = 0;
+    // [System.NonSerialized] public float JoyStick0 = 0;
 
     //ロードセルの調整用係数(この係数をロードセルの値に掛ける)
     // [System.NonSerialized] public float massLeftFactor = 1;
@@ -97,13 +99,14 @@ public class GameParameters
 
     // [System.NonSerialized] public bool FrameUseable = false;
     [System.NonSerialized] public int SettingMode = 0;
-    [System.NonSerialized] public bool TakeOff = false;
+    // [System.NonSerialized] public bool TakeOff = false;
     [System.NonSerialized] public float SoundVolume = 0;
     // [System.NonSerialized] public string FlightModel;
     // [SerializeField] public string DefaultFlightModel = "isoSim2";
 
     // VRモード
     [System.NonSerialized] public bool VRMode = false;
+    public bool isVRInitialized = false; // VRが初期化されたかどうかを示すフラグ
 
     // CameraManager.csから移動
     [System.NonSerialized] public Vector3 caribrationOffset = Vector3.zero; // キャリブレーションのオフセットを保持するフィールド.
@@ -125,4 +128,72 @@ public class GameParameters
     [System.NonSerialized] public float GustRandValue = 0;
     [System.NonSerialized] public bool CgeRand = false;
     [System.NonSerialized] public float CgeRandValue = 0;
+
+    public System.Diagnostics.Stopwatch statusStopwatch;
+    public float timeInCurrentStatus = 0.0f;
+
+    public System.Diagnostics.Stopwatch flightStopwatch;
+    public float timeInFlight = 0.0f;
+
+    public delegate void OnStatusChangeDelegate();
+    public event OnStatusChangeDelegate OnStatusChange;
+
+    public delegate void OnEnterPreparationDelegate();
+    public event OnEnterPreparationDelegate OnEnterPreparation;
+    public delegate void OnEnterFlightDelegate();
+    public event OnEnterFlightDelegate OnEnterFlight;
+    public delegate void OnSplashdownDelegate();
+    public event OnSplashdownDelegate OnSplashdown;
+    public delegate void OnEnterPauseDelegate();
+    public event OnEnterPauseDelegate OnEnterPause;
+
+    static private Thread thread_;
+    static private SynchronizationContext context = SynchronizationContext.Current;
+
+    public GameParameters()
+    {
+        statusStopwatch = new System.Diagnostics.Stopwatch();
+        statusStopwatch.Start();
+        flightStopwatch = new System.Diagnostics.Stopwatch();
+        thread_ = new Thread(InvokeEvent);
+        thread_.Start();
+    }
+
+    private void InvokeEvent()
+    {
+        while (true)
+        {
+            if (status != previousStatus)
+            {
+                context.Post(d => OnStatusChange?.Invoke(), null);
+                previousStatus = status;
+                statusStopwatch.Restart();
+                timeInCurrentStatus = 0.0f;
+
+                if (status == Status.Preparation)
+                {
+                    flightStopwatch.Reset();
+                    context.Post(d => OnEnterPreparation?.Invoke(), null);
+                }
+                else if (status == Status.Flight)
+                {
+                    flightStopwatch.Restart();
+                    context.Post(d => OnEnterFlight?.Invoke(), null);
+                }
+                else if (status == Status.Splashdown)
+                {
+                    flightStopwatch.Stop();
+                    context.Post(d => OnSplashdown?.Invoke(), null);
+                }
+                else if (status == Status.Pause)
+                {
+                    flightStopwatch.Stop();
+                    context.Post(d => OnEnterPause?.Invoke(), null);
+                }
+            }
+
+            timeInCurrentStatus = (float)statusStopwatch.Elapsed.TotalSeconds;
+            timeInFlight = (float)flightStopwatch.Elapsed.TotalSeconds;
+        }
+    }
 }
