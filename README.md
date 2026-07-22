@@ -19,3 +19,4 @@ https://polarized-pangolin-7b9.notion.site/1df9cd21ef598056a4c9f89eaf78941a
 
 # Author
 https://x.com/kimamaMan2005
+https://x.com/Meganekinoko_
