@@ -8,7 +8,7 @@ public class HoldingDetector{
     private GameParameters game;
     private CameraManager cm;
     private const float IGNORE_INPUT_TIME = 1.0f;
-    private float caribrateTimePre = 0.0f;
+    private float calibrateTimePre = 0.0f;
 
     public HoldingDetector(GameParameters _game, CameraManager _cm)
     {
@@ -29,19 +29,19 @@ public class HoldingDetector{
             }
             if (game.status == GameParameters.Status.Preparation) // 正の長押し＋準備
             {
-                if (game.timeInCurrentStatus - caribrateTimePre >= 0.5)
+                if (game.timeInCurrentStatus - calibrateTimePre >= 0.5)
                 {
-                    Debug.Log("CMD: Caribrate");
+                    Debug.Log("CMD: Calibrate");
                     if (cm == null)
                     {
                         cm = GameObject.Find("CameraManager").GetComponent<CameraManager>();
                     }
                     if (cm != null)
                     {
-                        cm.CaribrateVR();
+                        cm.CalibrateVR();
                     }
                     GameManager.instance.pilot.ResetPilotPosition();
-                    caribrateTimePre = game.timeInCurrentStatus;
+                    calibrateTimePre = game.timeInCurrentStatus;
                 }
             }
         }

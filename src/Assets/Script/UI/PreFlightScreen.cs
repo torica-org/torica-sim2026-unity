@@ -100,20 +100,20 @@ public class PreFlightScreen
         vrModeButtonRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 50); // RectTransformのy軸方向のサイズを変更する
         vrModeButtonRect.anchoredPosition = new Vector2(-50, -200); // アンカーを基準にした座標 (pos_x, pos_y) を設定
 
-        UnityAction CaribrateVR = () =>
+        UnityAction CalibrateVR = () =>
         {
-            cm.CaribrateVR();
+            cm.CalibrateVR();
         };
 
-        ActionButton caribrateVrButton = new(uiObj, "CaribrateVrButton", "Caribrate HMD(C)", CaribrateVR);
-        RectTransform caribrateVrButtonRect = caribrateVrButton.rectTransform;
-        caribrateVrButtonRect.anchorMin = new Vector2(1f, 1f); // アンカーの最小値
-        caribrateVrButtonRect.anchorMax = new Vector2(1f, 1f); // アンカーの最大値
-        caribrateVrButtonRect.pivot = new Vector2(1f, 1f); // ピボット（ボタン自身の基準点）
-        caribrateVrButtonRect.localScale = new Vector3(2, 2, 1); // テキストのサイズを変更する
-        caribrateVrButtonRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 230); // RectTransformのx軸方向のサイズを変更する
-        caribrateVrButtonRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 50); // RectTransformのy軸方向のサイズを変更する
-        caribrateVrButtonRect.anchoredPosition = new Vector2(-50, -330); // アンカーを基準にした座標 (pos_x, pos_y) を設定
+        ActionButton calibrateVrButton = new(uiObj, "CalibrateVrButton", "Calibrate HMD(C)", CalibrateVR);
+        RectTransform calibrateVrButtonRect = calibrateVrButton.rectTransform;
+        calibrateVrButtonRect.anchorMin = new Vector2(1f, 1f); // アンカーの最小値
+        calibrateVrButtonRect.anchorMax = new Vector2(1f, 1f); // アンカーの最大値
+        calibrateVrButtonRect.pivot = new Vector2(1f, 1f); // ピボット（ボタン自身の基準点）
+        calibrateVrButtonRect.localScale = new Vector3(2, 2, 1); // テキストのサイズを変更する
+        calibrateVrButtonRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 230); // RectTransformのx軸方向のサイズを変更する
+        calibrateVrButtonRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 50); // RectTransformのy軸方向のサイズを変更する
+        calibrateVrButtonRect.anchoredPosition = new Vector2(-50, -330); // アンカーを基準にした座標 (pos_x, pos_y) を設定
 
         DynamicText<bool> dynamicText = new(uiObj, "VRStatus", () => { return gm.game.VRMode; });
         RectTransform textRect = dynamicText.rectTransform;

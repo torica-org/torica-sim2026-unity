@@ -62,6 +62,7 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        game.status = GameParameters.Status.Preparation;
         calc?.Initialize(); // シーンロードのたびにRigidbodyが破壊されるので再取得
     }
     // ===== 毎フレーム実行される ==============

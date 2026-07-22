@@ -82,7 +82,7 @@ public class CameraManager : MonoBehaviour
         // "c"キーが押されたらVRのキャリブレーションを行う.
         if (Input.GetKeyDown("c"))
         {
-            CaribrateVR();
+            CalibrateVR();
         }
         //
         if (Input.GetKeyDown("f6"))
@@ -209,7 +209,7 @@ public class CameraManager : MonoBehaviour
     }
 
     // ===== キャリブレーションを行うメソッド（staticなのでインスタンス化無しで呼べる） ============
-    public void CaribrateVR()
+    public void CalibrateVR()
     {
         if (!XRCamera || !gm.game.isVRInitialized)
         {
