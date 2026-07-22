@@ -27,7 +27,7 @@ public class Splashdown : MonoBehaviour
         //canvas.enabled = true;
         ResultScreen.terminationReason = "着水";
         string sign = Config.WindDirection > 0f ? "R" : Config.WindDirection < 0f ? "L" : "";
-        string info = $"WindDirection: {sign}{Config.WindDirection:0.0}°, WindSpeed: {Config.WindSpeed:0.0} m/s";
+        string info = $"WindDirection: {sign}{Config.WindDirection:0.0}deg, WindSpeed: {Config.WindSpeed:0.0}m/s";
         Log.Append($"[Splashdown!] Flew {GameManager.instance.game.Distance:0.00}m in {GameManager.instance.game.timeInFlight:0.0}s! ({info})");
     }
 

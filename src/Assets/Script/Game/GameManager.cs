@@ -70,19 +70,11 @@ public class GameManager : MonoBehaviour
         calc.DevicesUpdate();
 
         // ----- ゲームの状態を管理 -----
-        if (game.status == GameParameters.Status.Preparation)
-        {
-            Time.timeScale = 0f;
-        }
-        else if (game.status == GameParameters.Status.Flight)
+        if (game.status == GameParameters.Status.Flight)
         {
             Time.timeScale = 1f;
         }
-        else if (game.status == GameParameters.Status.Splashdown)
-        {
-            Time.timeScale = 0f;
-        }
-        else if (game.status == GameParameters.Status.Pause)
+        else
         {
             Time.timeScale = 0f;
         }

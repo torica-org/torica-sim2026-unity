@@ -15,7 +15,7 @@ AircraftDataName = REWRITE_シミュデータ
 OverridePilotMass = 0
 
 // オーディオの音量(初期値: 50.0)
-AudioVolume = 74
+AudioVolume = 60
 
 // 飛行中の画面の周囲に情報を表示する(True/False)
 ShowHUD = True
